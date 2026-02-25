@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LiDAR 快速参考手册</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --code-bg: #f5f5f5;
+            --border-color: #e0e0e0;
+            --link-color: #0066cc;
+        }
+
+        @media print {
+            body {
+                font-size: 11pt;
+            }
+            .no-print {
+                display: none !important;
+            }
+            @page {
+                margin: 2cm;
+                size: A4;
+            }
+            h1, h2, h3 {
+                page-break-after: avoid;
+            }
+            pre, table, img {
+                page-break-inside: avoid;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            line-height: 1.8;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        h1 {
+            font-size: 2em;
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 15px;
+            margin-top: 40px;
+            color: #2c3e50;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 35px;
+            color: #34495e;
+        }
+
+        h3 {
+            font-size: 1.25em;
+            margin-top: 25px;
+            color: #2c3e50;
+        }
+
+        h4 {
+            font-size: 1.1em;
+            margin-top: 20px;
+            color: #34495e;
+        }
+
+        p {
+            margin: 15px 0;
+        }
+
+        code {
+            font-family: "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+            background-color: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+            font-size: 0.9em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95em;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        blockquote {
+            border-left: 4px solid #3498db;
+            margin: 20px 0;
+            padding: 10px 20px;
+            background-color: #f9f9f9;
+        }
+
+        ul, ol {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid #eee;
+            margin: 40px 0;
+        }
+
+        .print-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .print-button:hover {
+            background-color: #2980b9;
+        }
+
+        .toc {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px 25px;
+            margin: 30px 0;
+        }
+
+        .toc h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .toc ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .toc li {
+            margin: 8px 0;
+        }
+
+        .toc a {
+            color: #495057;
+        }
+
+        em {
+            color: #666;
+            font-size: 0.95em;
+        }
+    </style>
+</head>
+<body>
+    <button class="print-button no-print" onclick="window.print()">打印 / 导出 PDF</button>
+
+    <h1 id="lidar">LiDAR 快速参考手册</h1>
+<h2 id="_1">核心概念速查</h2>
+<h3 id="lidar_1">LiDAR 基本原理</h3>
+<pre><code>距离 = (光速 × 飞行时间) / 2
+
+其中：
+- 光速 c ≈ 3 × 10^8 m/s
+- 飞行时间：激光发射到接收的时间间隔
+</code></pre>
+<h3 id="_2">关键参数定义</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>英文</th>
+<th>说明</th>
+<th>典型值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RPM</td>
+<td>Rotations Per Minute</td>
+<td>每分钟旋转圈数</td>
+<td>5-20</td>
+</tr>
+<tr>
+<td>线数</td>
+<td>Laser Lines</td>
+<td>垂直方向激光器数量</td>
+<td>16/32/64</td>
+</tr>
+<tr>
+<td>垂直 FOV</td>
+<td>Vertical Field of View</td>
+<td>垂直扫描范围</td>
+<td>±15°~±30°</td>
+</tr>
+<tr>
+<td>水平分辨率</td>
+<td>Horizontal Resolution</td>
+<td>水平角度分辨率</td>
+<td>0.1°~0.4°</td>
+</tr>
+<tr>
+<td>探测距离</td>
+<td>Detection Range</td>
+<td>最大有效距离</td>
+<td>100-200m</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_3">关键公式</h2>
+<h3 id="_4">坐标转换</h3>
+<p><strong>球坐标 → 直角坐标</strong>：</p>
+<pre><code class="language-python"># 已知：距离 d，水平角 h，垂直角 v
+x = d * cos(v) * cos(h)
+y = d * sin(v)
+z = d * cos(v) * sin(h)
+</code></pre>
+<p><strong>直角坐标 → 球坐标</strong>：</p>
+<pre><code class="language-python"># 已知：直角坐标 (x, y, z)
+d = sqrt(x² + y² + z²)
+h = atan2(z, x)
+v = atan2(y, sqrt(x² + z²))
+</code></pre>
+<h3 id="_5">分辨率计算</h3>
+<pre><code class="language-python"># 水平分辨率
+horizontal_resolution = 360 / points_per_rotation
+
+# 垂直分辨率
+vertical_resolution = vertical_fov / (laser_lines - 1)
+
+# 点云密度（点/秒）
+point_density = horizontal_points * laser_lines * rpm / 60
+</code></pre>
+<h3 id="_6">角度与弧度转换</h3>
+<pre><code class="language-python">import math
+
+# 角度 → 弧度
+radians = math.radians(degrees)
+
+# 弧度 → 角度
+degrees = math.degrees(radians)
+
+# RPM → 度/秒
+degrees_per_second = rpm * 6.0
+</code></pre>
+<hr />
+<h2 id="_7">碰撞检测算法</h2>
+<h3 id="-aabb-slab">射线-AABB 相交（Slab 方法）</h3>
+<pre><code class="language-python">def ray_aabb_intersect(ray_origin, ray_dir, box_min, box_max):
+    &quot;&quot;&quot;
+    射线与轴对齐包围盒相交检测
+
+    返回：(是否相交, 相交参数t)
+    &quot;&quot;&quot;
+    tmin, tmax = -float('inf'), float('inf')
+
+    for i in range(3):  # X, Y, Z 三个轴
+        if abs(ray_dir[i]) &lt; 1e-8:
+            if ray_origin[i] &lt; box_min[i] or ray_origin[i] &gt; box_max[i]:
+                return False, float('inf')
+        else:
+            t1 = (box_min[i] - ray_origin[i]) / ray_dir[i]
+            t2 = (box_max[i] - ray_origin[i]) / ray_dir[i]
+            if t1 &gt; t2:
+                t1, t2 = t2, t1
+            tmin = max(tmin, t1)
+            tmax = min(tmax, t2)
+            if tmin &gt; tmax:
+                return False, float('inf')
+
+    t = tmin if tmin &gt;= 0 else tmax
+    return True, t
+</code></pre>
+<h3 id="-">射线-平面相交</h3>
+<pre><code class="language-python">def ray_plane_intersect(ray_origin, ray_dir, plane_point, plane_normal):
+    &quot;&quot;&quot;
+    射线与平面相交检测
+
+    参数：
+        ray_origin: 射线起点
+        ray_dir: 射线方向（需归一化）
+        plane_point: 平面上一点
+        plane_normal: 平面法向量（需归一化）
+
+    返回：(是否相交, 相交参数t, 交点)
+    &quot;&quot;&quot;
+    denom = np.dot(plane_normal, ray_dir)
+    if abs(denom) &lt; 1e-8:
+        return False, float('inf'), None  # 射线与平面平行
+
+    t = np.dot(plane_point - ray_origin, plane_normal) / denom
+    if t &lt; 0:
+        return False, float('inf'), None  # 交点在射线反向
+
+    hit_point = ray_origin + t * ray_dir
+    return True, t, hit_point
+</code></pre>
+<h3 id="-_1">射线-圆柱相交</h3>
+<pre><code class="language-python">def ray_cylinder_intersect(ray_origin, ray_dir, cylinder_center, radius, height):
+    &quot;&quot;&quot;
+    射线与Y轴对齐圆柱相交检测
+
+    圆柱方程：x² + z² = r²
+    &quot;&quot;&quot;
+    ox = ray_origin[0] - cylinder_center[0]
+    oz = ray_origin[2] - cylinder_center[2]
+    dx, dz = ray_dir[0], ray_dir[2]
+
+    # 二次方程系数
+    a = dx*dx + dz*dz
+    b = 2 * (ox*dx + oz*dz)
+    c = ox*ox + oz*oz - radius*radius
+
+    discriminant = b*b - 4*a*c
+    if discriminant &lt; 0:
+        return False, float('inf')
+
+    sqrt_disc = math.sqrt(discriminant)
+    t1 = (-b - sqrt_disc) / (2*a)
+    t2 = (-b + sqrt_disc) / (2*a)
+
+    # 检查高度限制和取正解
+    for t in [t1, t2]:
+        if t &gt;= 0:
+            y = ray_origin[1] + t * ray_dir[1]
+            if cylinder_center[1] &lt;= y &lt;= cylinder_center[1] + height:
+                return True, t
+
+    return False, float('inf')
+</code></pre>
+<hr />
+<h2 id="opengl">OpenGL 常用代码片段</h2>
+<h3 id="_8">初始化设置</h3>
+<pre><code class="language-python">from OpenGL.GL import *
+from OpenGL.GLU import *
+
+def initializeGL():
+    # 背景颜色
+    glClearColor(0.15, 0.15, 0.18, 1.0)
+
+    # 深度测试
+    glEnable(GL_DEPTH_TEST)
+    glDepthFunc(GL_LEQUAL)
+
+    # 混合（透明度）
+    glEnable(GL_BLEND)
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
+    # 光照
+    glEnable(GL_LIGHTING)
+    glEnable(GL_LIGHT0)
+    glLightfv(GL_LIGHT0, GL_POSITION, [5.0, 10.0, 5.0, 1.0])
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
+</code></pre>
+<h3 id="_9">绘制基本形状</h3>
+<pre><code class="language-python">def draw_cylinder(radius, height, slices=32):
+    &quot;&quot;&quot;绘制圆柱体&quot;&quot;&quot;
+    quadric = gluNewQuadric()
+    gluQuadricNormals(quadric, GLU_SMOOTH)
+    glPushMatrix()
+    glRotatef(-90, 1, 0, 0)
+    gluCylinder(quadric, radius, radius, height, slices, 1)
+    glPopMatrix()
+    gluDeleteQuadric(quadric)
+
+def draw_sphere(radius, slices=32, stacks=32):
+    &quot;&quot;&quot;绘制球体&quot;&quot;&quot;
+    quadric = gluNewQuadric()
+    gluQuadricNormals(quadric, GLU_SMOOTH)
+    gluSphere(quadric, radius, slices, stacks)
+    gluDeleteQuadric(quadric)
+
+def draw_box(width, height, depth):
+    &quot;&quot;&quot;绘制长方体&quot;&quot;&quot;
+    w, h, d = width/2, height/2, depth/2
+    glBegin(GL_QUADS)
+    # 前面
+    glNormal3f(0, 0, 1)
+    glVertex3f(-w, -h, d); glVertex3f(w, -h, d)
+    glVertex3f(w, h, d); glVertex3f(-w, h, d)
+    # 后面
+    glNormal3f(0, 0, -1)
+    glVertex3f(-w, -h, -d); glVertex3f(-w, h, -d)
+    glVertex3f(w, h, -d); glVertex3f(w, -h, -d)
+    # 其他面...
+    glEnd()
+</code></pre>
+<h3 id="_10">点云绘制</h3>
+<pre><code class="language-python">def draw_point_cloud(points, colors):
+    &quot;&quot;&quot;绘制点云
+
+    参数：
+        points: [(x, y, z), ...]
+        colors: [(r, g, b, a), ...] 或按类型的颜色映射
+    &quot;&quot;&quot;
+    glDisable(GL_LIGHTING)
+    glPointSize(3.0)
+
+    glBegin(GL_POINTS)
+    for i, point in enumerate(points):
+        if isinstance(colors, dict):
+            # 按类型着色
+            color = colors.get(point[3], (0.5, 0.5, 0.5, 1.0))
+        else:
+            color = colors[i]
+        glColor4fv(color)
+        glVertex3f(point[0], point[1], point[2])
+    glEnd()
+
+    glEnable(GL_LIGHTING)
+</code></pre>
+<h3 id="_11">相机设置</h3>
+<pre><code class="language-python">def setup_camera(fov=45, aspect=16/9, near=0.1, far=100):
+    &quot;&quot;&quot;设置透视投影&quot;&quot;&quot;
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+    gluPerspective(fov, aspect, near, far)
+    glMatrixMode(GL_MODELVIEW)
+
+def look_at(eye, target, up):
+    &quot;&quot;&quot;设置视图矩阵&quot;&quot;&quot;
+    glLoadIdentity()
+    gluLookAt(
+        eye[0], eye[1], eye[2],
+        target[0], target[1], target[2],
+        up[0], up[1], up[2]
+    )
+</code></pre>
+<hr />
+<h2 id="pyqt5">PyQt5 常用代码片段</h2>
+<h3 id="_12">创建滑块控件</h3>
+<pre><code class="language-python">from PyQt5.QtWidgets import QSlider, QLabel, QVBoxLayout
+
+def create_slider(name, min_val, max_val, default, callback):
+    &quot;&quot;&quot;创建带标签的滑块&quot;&quot;&quot;
+    layout = QVBoxLayout()
+
+    label = QLabel(f&quot;{name}: {default}&quot;)
+    slider = QSlider(Qt.Horizontal)
+    slider.setMinimum(min_val)
+    slider.setMaximum(max_val)
+    slider.setValue(default)
+
+    def on_change(val):
+        label.setText(f&quot;{name}: {val}&quot;)
+        callback(val)
+
+    slider.valueChanged.connect(on_change)
+
+    layout.addWidget(label)
+    layout.addWidget(slider)
+    return layout, slider
+</code></pre>
+<h3 id="_13">定时器动画</h3>
+<pre><code class="language-python">from PyQt5.QtCore import QTimer
+
+class AnimationWidget:
+    def __init__(self):
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.update_animation)
+        self.timer.start(16)  # ~60 FPS
+        self.last_time = time.time()
+
+    def update_animation(self):
+        current_time = time.time()
+        dt = current_time - self.last_time
+        self.last_time = current_time
+
+        # 更新动画状态
+        self.rotation_angle += self.rpm * 6.0 * dt
+
+        # 触发重绘
+        self.update()
+</code></pre>
+<hr />
+<h2 id="_14">快捷键参考</h2>
+<h3 id="_15">程序控制</h3>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>R</code></td>
+<td>重置视角到默认位置</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td>切换到俯视图</td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td>切换到正视图</td>
+</tr>
+<tr>
+<td><code>3</code></td>
+<td>切换到侧视图</td>
+</tr>
+<tr>
+<td><code>4</code></td>
+<td>切换到透视图</td>
+</tr>
+<tr>
+<td><code>5</code></td>
+<td>切换到等轴视图</td>
+</tr>
+<tr>
+<td><code>ESC</code></td>
+<td>退出程序</td>
+</tr>
+<tr>
+<td><code>Space</code></td>
+<td>暂停/继续动画</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_16">鼠标操作</h3>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>左键拖拽</td>
+<td>旋转视角</td>
+</tr>
+<tr>
+<td>右键拖拽</td>
+<td>平移视角</td>
+</tr>
+<tr>
+<td>滚轮</td>
+<td>缩放</td>
+</tr>
+<tr>
+<td>双击</td>
+<td>重置视角</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_17">故障排除</h2>
+<h3 id="_18">常见错误及解决方案</h3>
+<table>
+<thead>
+<tr>
+<th>错误信息</th>
+<th>可能原因</th>
+<th>解决方案</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ModuleNotFoundError: No module named 'PyQt5'</code></td>
+<td>依赖未安装</td>
+<td><code>pip install PyQt5</code></td>
+</tr>
+<tr>
+<td><code>OpenGL error: invalid operation</code></td>
+<td>OpenGL 状态错误</td>
+<td>检查 GL 调用顺序</td>
+</tr>
+<tr>
+<td><code>glCreateShader failed</code></td>
+<td>显卡不支持</td>
+<td>更新显卡驱动</td>
+</tr>
+<tr>
+<td>程序窗口黑屏</td>
+<td>OpenGL 初始化失败</td>
+<td>检查 GL 版本支持</td>
+</tr>
+<tr>
+<td>点云不显示</td>
+<td>碰撞检测失败</td>
+<td>检查射线方向和范围</td>
+</tr>
+<tr>
+<td>动画卡顿</td>
+<td>帧率过低</td>
+<td>减少点云数量或优化渲染</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_19">调试技巧</h3>
+<pre><code class="language-python"># 检查 OpenGL 错误
+def check_gl_error():
+    error = glGetError()
+    if error != GL_NO_ERROR:
+        print(f&quot;OpenGL Error: {error}&quot;)
+
+# 打印点云统计
+def print_point_cloud_stats(points):
+    print(f&quot;点云数量: {len(points)}&quot;)
+    if points:
+        arr = np.array([p[:3] for p in points])
+        print(f&quot;X 范围: [{arr[:,0].min():.2f}, {arr[:,0].max():.2f}]&quot;)
+        print(f&quot;Y 范围: [{arr[:,1].min():.2f}, {arr[:,1].max():.2f}]&quot;)
+        print(f&quot;Z 范围: [{arr[:,2].min():.2f}, {arr[:,2].max():.2f}]&quot;)
+</code></pre>
+<hr />
+<h2 id="_20">文件结构速查</h2>
+<pre><code>lidar_architecture/
+├── main.py                 # 程序入口
+├── requirements.txt        # 依赖列表
+├── convert_to_html.py      # Markdown 转 HTML
+│
+├── ui/
+│   ├── main_window.py      # 主窗口
+│   └── control_panel.py    # 控制面板
+│
+├── opengl/
+│   ├── gl_widget.py        # OpenGL 控件
+│   ├── camera.py           # 相机控制
+│   ├── scene.py            # 场景管理
+│   └── environment.py      # 环境对象
+│
+└── docs/
+    ├── textbook/           # 教材文档
+    └── images/             # 图片资源
+</code></pre>
+<hr />
+<h2 id="_21">常用命令</h2>
+<h3 id="_22">环境管理</h3>
+<pre><code class="language-bash"># 创建虚拟环境
+python -m venv venv
+
+# 激活虚拟环境
+source venv/bin/activate  # macOS/Linux
+venv\Scripts\activate     # Windows
+
+# 安装依赖
+pip install -r requirements.txt
+
+# 冻结依赖
+pip freeze &gt; requirements.txt
+</code></pre>
+<h3 id="_23">运行和测试</h3>
+<pre><code class="language-bash"># 运行主程序
+python main.py
+
+# 转换文档
+python convert_to_html.py
+
+# 启动本地服务器查看文档
+python -m http.server 8000
+</code></pre>
+<hr />
+<p><em>本快速参考手册配套项目：机械旋转式激光雷达教学演示系统</em></p>
+<p><em>最后更新：2026年2月</em></p>
+</body>
+</html>

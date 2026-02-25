@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>机械旋转式激光雷达教学演示系统</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --code-bg: #f5f5f5;
+            --border-color: #e0e0e0;
+            --link-color: #0066cc;
+        }
+
+        @media print {
+            body {
+                font-size: 11pt;
+            }
+            .no-print {
+                display: none !important;
+            }
+            @page {
+                margin: 2cm;
+                size: A4;
+            }
+            h1, h2, h3 {
+                page-break-after: avoid;
+            }
+            pre, table, img {
+                page-break-inside: avoid;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            line-height: 1.8;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        h1 {
+            font-size: 2em;
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 15px;
+            margin-top: 40px;
+            color: #2c3e50;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 35px;
+            color: #34495e;
+        }
+
+        h3 {
+            font-size: 1.25em;
+            margin-top: 25px;
+            color: #2c3e50;
+        }
+
+        h4 {
+            font-size: 1.1em;
+            margin-top: 20px;
+            color: #34495e;
+        }
+
+        p {
+            margin: 15px 0;
+        }
+
+        code {
+            font-family: "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+            background-color: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+            font-size: 0.9em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95em;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        blockquote {
+            border-left: 4px solid #3498db;
+            margin: 20px 0;
+            padding: 10px 20px;
+            background-color: #f9f9f9;
+        }
+
+        ul, ol {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid #eee;
+            margin: 40px 0;
+        }
+
+        .print-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .print-button:hover {
+            background-color: #2980b9;
+        }
+
+        .toc {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px 25px;
+            margin: 30px 0;
+        }
+
+        .toc h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .toc ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .toc li {
+            margin: 8px 0;
+        }
+
+        .toc a {
+            color: #495057;
+        }
+
+        em {
+            color: #666;
+            font-size: 0.95em;
+        }
+    </style>
+</head>
+<body>
+    <button class="print-button no-print" onclick="window.print()">打印 / 导出 PDF</button>
+
+    <h1 id="_1">机械旋转式激光雷达教学演示系统</h1>
+<h2 id="_2">第一章：教学概述</h2>
+<h3 id="11">1.1 教学目标</h3>
+<p>通过本系统的学习，学生将能够：</p>
+<ol>
+<li><strong>理解机械旋转式 LiDAR 的工作原理</strong></li>
+<li>掌握激光测距的基本原理</li>
+<li>理解水平旋转扫描和垂直线束分布的机制</li>
+<li>
+<p>了解点云数据的生成过程</p>
+</li>
+<li>
+<p><strong>掌握 3D 图形编程基础</strong></p>
+</li>
+<li>学习 OpenGL 渲染管线</li>
+<li>理解坐标变换和投影</li>
+<li>
+<p>掌握相机控制和视角切换</p>
+</li>
+<li>
+<p><strong>学习射线碰撞检测算法</strong></p>
+</li>
+<li>射线-AABB（轴对齐包围盒）相交检测</li>
+<li>射线-圆柱相交检测</li>
+<li>
+<p>多物体碰撞检测优化</p>
+</li>
+<li>
+<p><strong>了解点云数据生成过程</strong></p>
+</li>
+<li>从传感器参数到点云的映射</li>
+<li>环境重建的基本概念</li>
+<li>数据着色和可视化</li>
+</ol>
+<h3 id="12">1.2 适用对象</h3>
+<ul>
+<li>汽车专业高职学生</li>
+<li>新能源汽车技术专业学生</li>
+<li>自动驾驶入门学习者</li>
+<li>对 LiDAR 技术感兴趣的工程师</li>
+</ul>
+<h3 id="13">1.3 先修知识</h3>
+<table>
+<thead>
+<tr>
+<th>知识领域</th>
+<th>要求程度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python 编程</td>
+<td>基础</td>
+<td>能够阅读和理解 Python 代码</td>
+</tr>
+<tr>
+<td>线性代数</td>
+<td>基础</td>
+<td>向量、矩阵运算、坐标变换</td>
+</tr>
+<tr>
+<td>计算机图形学</td>
+<td>可选</td>
+<td>了解 3D 渲染基本概念即可</td>
+</tr>
+<tr>
+<td>PyQt5</td>
+<td>可选</td>
+<td>本教材会涉及必要的 GUI 知识</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="lidar">第二章：LiDAR 技术背景</h2>
+<h3 id="21">2.1 什么是激光雷达</h3>
+<p><strong>LiDAR</strong> (Light Detection and Ranging) 是一种通过发射激光脉冲并测量反射时间来确定物体距离的遥感技术。</p>
+<h4 id="_3">基本原理</h4>
+<pre><code>距离 = (光速 × 飞行时间) / 2
+</code></pre>
+<h4 id="_4">核心组成部分</h4>
+<ol>
+<li><strong>激光发射器</strong>：产生短脉冲激光</li>
+<li><strong>光学系统</strong>：控制激光的发射和接收方向</li>
+<li><strong>光电探测器</strong>：接收反射光并转换为电信号</li>
+<li><strong>计时电路</strong>：精确测量飞行时间</li>
+<li><strong>扫描机构</strong>：控制激光束的方向扫描</li>
+</ol>
+<h3 id="22-lidar">2.2 机械旋转式 LiDAR 结构</h3>
+<p>本演示系统模拟的是经典的<strong>机械旋转式 LiDAR</strong>，其结构如下：</p>
+<pre><code>        ┌─────────────────┐
+        │    旋转头部      │ ← 水平360°旋转
+        │  ┌───────────┐  │
+        │  │ 激光单元   │  │ ← 垂直线束排列
+        │  │ 发射器/接收器│  │
+        │  └───────────┘  │
+        ├─────────────────┤
+        │    电机传动      │ ← 驱动旋转
+        ├─────────────────┤
+        │    底座外壳      │ ← 固定安装
+        └─────────────────┘
+</code></pre>
+<h4 id="_5">关键参数</h4>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>典型值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>转速 (RPM)</td>
+<td>水平旋转速度</td>
+<td>5-20 RPM</td>
+</tr>
+<tr>
+<td>线数</td>
+<td>垂直方向激光器数量</td>
+<td>16/32/64/128</td>
+</tr>
+<tr>
+<td>垂直视场角</td>
+<td>垂直扫描范围</td>
+<td>±15° ~ ±30°</td>
+</tr>
+<tr>
+<td>水平分辨率</td>
+<td>水平角度分辨率</td>
+<td>0.1° ~ 0.4°</td>
+</tr>
+<tr>
+<td>探测距离</td>
+<td>最大有效距离</td>
+<td>100m ~ 200m</td>
+</tr>
+</tbody>
+</table>
+<h3 id="23">2.3 点云数据与应用场景</h3>
+<h4 id="_6">点云格式</h4>
+<p>每个点通常包含：
+- <strong>三维坐标</strong> (x, y, z)
+- <strong>反射强度</strong> (intensity)
+- <strong>时间戳</strong> (timestamp)</p>
+<pre><code>点云示例:
+[
+  (x: 4.5, y: 0.2, z: -1.3, intensity: 0.8),
+  (x: 7.2, y: 1.5, z: 0.0, intensity: 0.3),
+  ...
+]
+</code></pre>
+<h4 id="_7">应用场景</h4>
+<ol>
+<li><strong>自动驾驶</strong>：环境感知、障碍物检测</li>
+<li><strong>机器人导航</strong>：SLAM（同步定位与地图构建）</li>
+<li><strong>地形测绘</strong>：高精度三维地形重建</li>
+<li><strong>建筑测量</strong>：建筑物三维扫描</li>
+<li><strong>林业调查</strong>：森林覆盖率、树木高度测量</li>
+</ol>
+<hr />
+<h2 id="_8">第三章：系统架构与设计</h2>
+<h3 id="31">3.1 技术选型</h3>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>技术选型</th>
+<th>选型理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GUI 框架</td>
+<td>PyQt5</td>
+<td>成熟的跨平台 GUI 库，与 OpenGL 集成良好</td>
+</tr>
+<tr>
+<td>3D 渲染</td>
+<td>PyOpenGL</td>
+<td>Python 的 OpenGL 绑定，高性能 3D 渲染</td>
+</tr>
+<tr>
+<td>数学计算</td>
+<td>NumPy</td>
+<td>高效的向量和矩阵运算</td>
+</tr>
+<tr>
+<td>动画计时</td>
+<td>QTimer</td>
+<td>流畅的动画帧控制（目标 60 FPS）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32">3.2 模块划分</h3>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│                      MainWindow                          │
+│  ┌───────────────────────────┐  ┌───────────────────┐  │
+│  │       GLWidget            │  │   ControlPanel    │  │
+│  │  ┌─────────────────────┐  │  │  - 扫描参数       │  │
+│  │  │       Scene         │  │  │  - 显示控制       │  │
+│  │  │  ┌───────┐ ┌──────┐ │  │  │  - 视角预设       │  │
+│  │  │  │Camera │ │Models│ │  │  └───────────────────┘  │
+│  │  │  └───────┘ └──────┘ │  │                         │
+│  │  │  ┌────────────────┐ │  │                         │
+│  │  │  │   Environment  │ │  │                         │
+│  │  │  └────────────────┘ │  │                         │
+│  │  └─────────────────────┘  │                         │
+│  └───────────────────────────┘                         │
+└─────────────────────────────────────────────────────────┘
+</code></pre>
+<h4 id="_9">模块职责</h4>
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>文件</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>UI 层</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>MainWindow</td>
+<td>ui/main_window.py</td>
+<td>主窗口布局、菜单栏、状态栏</td>
+</tr>
+<tr>
+<td>ControlPanel</td>
+<td>ui/control_panel.py</td>
+<td>参数控制滑块、复选框、按钮</td>
+</tr>
+<tr>
+<td><strong>渲染层</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>GLWidget</td>
+<td>opengl/gl_widget.py</td>
+<td>OpenGL 上下文、渲染循环、交互事件</td>
+</tr>
+<tr>
+<td>Camera</td>
+<td>opengl/camera.py</td>
+<td>视角控制、投影变换</td>
+</tr>
+<tr>
+<td>Scene</td>
+<td>opengl/scene.py</td>
+<td>场景管理、模型渲染、点云生成</td>
+</tr>
+<tr>
+<td><strong>模型层</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Environment</td>
+<td>opengl/environment.py</td>
+<td>环境对象（车辆、墙壁）、碰撞检测</td>
+</tr>
+</tbody>
+</table>
+<h3 id="33">3.3 数据流设计</h3>
+<pre><code>用户输入                    渲染输出
+   │                           ▲
+   ▼                           │
+ControlPanel ──────► GLWidget ─┤
+   │                   │       │
+   │ 参数变更          │ 更新  │ 渲染
+   ▼                   ▼       │
+Scene ◄───────────── Camera    │
+   │                           │
+   │ 生成                       │
+   ▼                           │
+Point Cloud ──────────────────►│
+   │                           │
+   │ 碰撞检测                   │
+   ▼                           │
+Environment ──────────────────►│
+</code></pre>
+<hr />
+<h2 id="_10">第四章：核心代码解析</h2>
+<h3 id="41-opengl">4.1 OpenGL 渲染管线</h3>
+<h4 id="_11">初始化流程</h4>
+<pre><code class="language-python">def initializeGL(self):
+    # 1. 设置背景颜色
+    glClearColor(0.15, 0.15, 0.18, 1.0)
+
+    # 2. 启用深度测试（正确处理遮挡关系）
+    glEnable(GL_DEPTH_TEST)
+    glDepthFunc(GL_LEQUAL)
+
+    # 3. 启用混合（支持半透明渲染）
+    glEnable(GL_BLEND)
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
+    # 4. 启用光照
+    glEnable(GL_LIGHTING)
+    glEnable(GL_LIGHT0)
+    glLightfv(GL_LIGHT0, GL_POSITION, [5.0, 10.0, 5.0, 1.0])
+</code></pre>
+<h4 id="_12">渲染循环</h4>
+<pre><code class="language-python">def paintGL(self):
+    # 1. 清除缓冲区
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
+    # 2. 重置模型视图矩阵
+    glLoadIdentity()
+
+    # 3. 应用相机变换
+    self.camera.apply_view()
+
+    # 4. 渲染场景
+    self.scene.render()
+</code></pre>
+<h3 id="42-lidar">4.2 LiDAR 模型构建</h3>
+<h4 id="_13">圆柱体绘制（底座）</h4>
+<pre><code class="language-python">def _draw_lidar_body(self):
+    &quot;&quot;&quot;绘制 LiDAR 外壳&quot;&quot;&quot;
+    glColor4fv(self.colors['body'])
+
+    # 底座圆柱
+    glPushMatrix()
+    glTranslatef(0, -1.5, 0)
+    quadric = gluNewQuadric()
+    gluQuadricNormals(quadric, GLU_SMOOTH)
+    glRotatef(-90, 1, 0, 0)
+    gluCylinder(quadric, 0.6, 0.6, 0.3, 32, 1)  # 底半径, 顶半径, 高度, 切片数, 堆叠数
+    gluDeleteQuadric(quadric)
+    glPopMatrix()
+</code></pre>
+<h4 id="_14">旋转动画</h4>
+<pre><code class="language-python">def update(self, dt):
+    &quot;&quot;&quot;更新场景状态&quot;&quot;&quot;
+    # RPM 转换为度/秒: RPM * 360 / 60 = RPM * 6
+    angle_per_second = self.rotation_speed * 6.0
+    self.rotation_angle += angle_per_second * dt
+    self.rotation_angle %= 360.0  # 保持在 0-360 范围内
+</code></pre>
+<h3 id="43">4.3 环境模型与碰撞检测</h3>
+<h4 id="-slab">射线-长方体相交（Slab 方法）</h4>
+<p>Slab 方法将 3D 相交问题分解为三个 1D 区间相交问题：</p>
+<pre><code class="language-python">def ray_intersect(self, ray):
+    &quot;&quot;&quot;
+    射线-长方体相交检测 (Slab 方法)
+
+    原理：将 AABB 看作三个无限 Slab（层）的交集
+    &quot;&quot;&quot;
+    min_bound, max_bound = self.get_bounds()
+
+    tmin = -float('inf')
+    tmax = float('inf')
+
+    for i in range(3):  # 分别处理 X, Y, Z 三个轴
+        if abs(ray.direction[i]) &lt; 1e-8:
+            # 射线平行于该轴，检查起点是否在 Slab 内
+            if ray.origin[i] &lt; min_bound[i] or ray.origin[i] &gt; max_bound[i]:
+                return False, float('inf')
+        else:
+            # 计算进入和离开该 Slab 的参数 t
+            t1 = (min_bound[i] - ray.origin[i]) / ray.direction[i]
+            t2 = (max_bound[i] - ray.origin[i]) / ray.direction[i]
+
+            if t1 &gt; t2:
+                t1, t2 = t2, t1  # 确保 t1 &lt;= t2
+
+            tmin = max(tmin, t1)  # 最晚进入时间
+            tmax = min(tmax, t2)  # 最早离开时间
+
+            if tmin &gt; tmax:
+                return False, float('inf')  # 区间无交集
+
+    t = tmin if tmin &gt;= 0 else tmax  # 取正的最近交点
+    return True, t
+</code></pre>
+<h4 id="-">射线-圆柱相交</h4>
+<p>圆柱相交需要求解二次方程：</p>
+<pre><code class="language-python">def ray_intersect(self, ray):
+    &quot;&quot;&quot;
+    射线-圆柱相交检测
+
+    数学原理：
+    圆柱方程 (Y轴为轴): x² + z² = r²
+    射线: P(t) = origin + t * direction
+
+    代入得到二次方程:
+    (dx² + dz²)t² + 2(ox·dx + oz·dz)t + (ox² + oz² - r²) = 0
+    &quot;&quot;&quot;
+    # 计算二次方程系数
+    a = dx * dx + dz * dz
+    b = 2 * (ox * dx + oz * dz)
+    c = ox * ox + oz * oz - self.radius * self.radius
+
+    discriminant = b * b - 4 * a * c
+
+    if discriminant &lt; 0:
+        return False, float('inf')  # 无实数解，不相交
+
+    sqrt_disc = math.sqrt(discriminant)
+    t1 = (-b - sqrt_disc) / (2 * a)  # 进入点
+    t2 = (-b + sqrt_disc) / (2 * a)  # 离开点
+
+    # 检查高度限制...
+</code></pre>
+<h3 id="44">4.4 点云生成算法</h3>
+<h4 id="_15">核心算法</h4>
+<pre><code class="language-python">def generate_point_cloud(self):
+    &quot;&quot;&quot;根据 LiDAR 参数和环境碰撞生成点云数据&quot;&quot;&quot;
+    self.point_cloud_data = []
+
+    # LiDAR 发射器位置
+    lidar_origin = np.array([0.35, 0.4, 0])
+
+    # 水平扫描分辨率
+    horizontal_resolution = 1.0  # 每度一个点
+
+    # 遍历 360° 水平角度
+    for h_angle in np.arange(0, 360, horizontal_resolution):
+        h_rad = math.radians(h_angle)
+
+        # 遍历所有激光线
+        for i in range(self.laser_lines):
+            # 计算垂直角度（均匀分布在垂直 FOV 内）
+            v_angle = -self.vertical_fov/2 + self.vertical_fov * i / (self.laser_lines - 1)
+            v_rad = math.radians(v_angle)
+
+            # 计算射线方向
+            dx = math.cos(v_rad) * math.cos(h_rad)
+            dy = math.sin(v_rad)
+            dz = math.cos(v_rad) * math.sin(h_rad)
+
+            direction = np.array([dx, dy, dz])
+
+            # 发射射线，获取碰撞点
+            hit_point, distance, hit_object = self.environment.ray_cast(
+                lidar_origin, direction
+            )
+
+            if hit_point is not None:
+                self.point_cloud_data.append((
+                    hit_point[0], hit_point[1], hit_point[2],
+                    hit_object  # 用于着色
+                ))
+</code></pre>
+<h4 id="_16">点云渲染</h4>
+<pre><code class="language-python">def _draw_point_cloud(self):
+    &quot;&quot;&quot;绘制点云&quot;&quot;&quot;
+    glDisable(GL_LIGHTING)
+    glPointSize(3.0)
+
+    glBegin(GL_POINTS)
+
+    for point in self.point_cloud_data:
+        x, y, z, hit_type = point
+
+        # 根据碰撞对象类型着色
+        if hit_type == 'vehicle':
+            glColor4f(0.2, 0.5, 1.0, 0.9)  # 蓝色
+        elif hit_type == 'wall':
+            glColor4f(1.0, 0.8, 0.2, 0.9)  # 黄色
+        elif hit_type == 'ground':
+            glColor4f(0.2, 0.8, 0.3, 0.9)  # 绿色
+
+        glVertex3f(x, y, z)
+
+    glEnd()
+    glEnable(GL_LIGHTING)
+</code></pre>
+<hr />
+<h2 id="_17">第五章：关键代码示例</h2>
+<h3 id="51">5.1 场景初始化</h3>
+<pre><code class="language-python"># main.py - 程序入口
+def main():
+    app = QApplication(sys.argv)
+    app.setApplicationName(&quot;LiDAR Architecture Demo&quot;)
+
+    window = MainWindow()
+    window.show()
+
+    sys.exit(app.exec_())
+</code></pre>
+<pre><code class="language-python"># main_window.py - 主窗口设置
+def _setup_ui(self):
+    # OpenGL 控件
+    self.gl_widget = GLWidget()
+
+    # 控制面板
+    self.control_panel = ControlPanel()
+
+    # 使用 Splitter 实现可调整布局
+    splitter = QSplitter(Qt.Horizontal)
+    splitter.addWidget(self.gl_widget)
+    splitter.addWidget(self.control_panel)
+</code></pre>
+<h3 id="52">5.2 射线投射</h3>
+<pre><code class="language-python"># environment.py - 完整的射线投射实现
+class Environment:
+    def ray_cast(self, origin, direction, max_distance=20.0):
+        &quot;&quot;&quot;
+        发射射线，返回最近碰撞点
+
+        Args:
+            origin: 射线起点 (x, y, z)
+            direction: 射线方向 (dx, dy, dz)
+            max_distance: 最大检测距离
+
+        Returns:
+            hit_point: 碰撞点坐标
+            distance: 碰撞距离
+            hit_object: 碰撞对象类型
+        &quot;&quot;&quot;
+        ray = Ray(origin, direction)
+
+        min_t = float('inf')
+        hit_object = None
+
+        # 检测与车辆的碰撞
+        is_hit, t = self.vehicle.ray_intersect(ray)
+        if is_hit and t &lt; min_t:
+            min_t = t
+            hit_object = 'vehicle'
+
+        # 检测与墙壁的碰撞
+        is_hit, t = self.wall.ray_intersect(ray)
+        if is_hit and t &lt; min_t:
+            min_t = t
+            hit_object = 'wall'
+
+        # 检测与地面的碰撞
+        if ray.direction[1] &lt; 0:  # 射线向下
+            t_ground = -ray.origin[1] / ray.direction[1]
+            if t_ground &gt;= 0 and t_ground &lt; min_t:
+                min_t = t_ground
+                hit_object = 'ground'
+
+        if min_t &lt; max_distance and hit_object:
+            hit_point = ray.origin + min_t * ray.direction
+            return hit_point, min_t, hit_object
+
+        return None, float('inf'), None
+</code></pre>
+<h3 id="53">5.3 点云渲染</h3>
+<pre><code class="language-python"># scene.py - 点云渲染
+def _draw_point_cloud(self):
+    &quot;&quot;&quot;绘制点云&quot;&quot;&quot;
+    glDisable(GL_LIGHTING)  # 点云不受光照影响
+    glPointSize(3.0)        # 设置点的大小
+
+    glBegin(GL_POINTS)      # 开始绘制点
+
+    for point in self.point_cloud_data:
+        x, y, z = point[0], point[1], point[2]
+        hit_type = point[3] if len(point) &gt; 3 else 'unknown'
+
+        # 根据碰撞对象类型着色
+        if hit_type == 'vehicle':
+            glColor4f(0.2, 0.5, 1.0, 0.9)  # 蓝色
+        elif hit_type == 'wall':
+            glColor4f(1.0, 0.8, 0.2, 0.9)  # 黄色
+        elif hit_type == 'ground':
+            glColor4f(0.2, 0.8, 0.3, 0.9)  # 绿色
+
+        glVertex3f(x, y, z)
+
+    glEnd()
+
+    glEnable(GL_LIGHTING)
+    glPointSize(1.0)
+</code></pre>
+<hr />
+<h2 id="_18">第六章：实验指导</h2>
+<h3 id="61">6.1 环境配置</h3>
+<h4 id="_19">系统要求</h4>
+<ul>
+<li>Python 3.8+</li>
+<li>支持 OpenGL 的显卡</li>
+</ul>
+<h4 id="_20">安装依赖</h4>
+<pre><code class="language-bash"># 创建虚拟环境（推荐）
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# 或 venv\Scripts\activate  # Windows
+
+# 安装依赖
+pip install -r requirements.txt
+</code></pre>
+<h4 id="_21">依赖说明</h4>
+<pre><code>PyQt5&gt;=5.15      # GUI 框架
+PyOpenGL&gt;=3.1.5  # OpenGL 绑定
+numpy&gt;=1.21      # 数学计算
+</code></pre>
+<h3 id="62">6.2 运行程序</h3>
+<pre><code class="language-bash"># 进入项目目录
+cd lidar_architecture
+
+# 运行程序
+python main.py
+</code></pre>
+<h3 id="63">6.3 程序界面截图</h3>
+<h4 id="_22">主界面</h4>
+<p><img alt="主界面" src="../images/main-interface.png" /></p>
+<p><em>图：系统主界面，左侧为 3D 渲染区域，右侧为控制面板</em></p>
+<h4 id="lidar_1">LiDAR 模型</h4>
+<p><img alt="LiDAR 模型" src="../images/lidar-model-side.png" /></p>
+<p><em>图：LiDAR 侧视图，可看到旋转头、激光发射单元和底座结构</em></p>
+<h4 id="_23">点云效果</h4>
+<p><img alt="点云效果" src="../images/point-cloud-perspective.png" /></p>
+<p><em>图：点云透视图，蓝色点为车辆、黄色点为墙壁、绿色点为地面</em></p>
+<h4 id="_24">多视角展示</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">俯视图</th>
+<th style="text-align: center;">等轴视图</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="俯视图" src="../images/top-view.png" /></td>
+<td style="text-align: center;"><img alt="等轴视图" src="../images/isometric-view.png" /></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">正视图</th>
+<th style="text-align: center;">侧视图</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="正视图" src="../images/front-view.png" /></td>
+<td style="text-align: center;"><img alt="侧视图" src="../images/lidar-model-side.png" /></td>
+</tr>
+</tbody>
+</table>
+<h4 id="_25">控制面板</h4>
+<p><img alt="控制面板" src="../images/control-panel.png" /></p>
+<p><em>图：控制面板，包含扫描参数、显示控制和视角预设</em></p>
+<h3 id="64">6.4 参数调节实验</h3>
+<h4 id="_26">实验一：转速对点云密度的影响</h4>
+<table>
+<thead>
+<tr>
+<th>转速 (RPM)</th>
+<th>水平点数/圈</th>
+<th>观察结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5</td>
+<td>720</td>
+<td>点云密集，旋转慢</td>
+</tr>
+<tr>
+<td>10</td>
+<td>360</td>
+<td>默认设置，平衡</td>
+</tr>
+<tr>
+<td>20</td>
+<td>180</td>
+<td>点云稀疏，旋转快</td>
+</tr>
+</tbody>
+</table>
+<p><strong>思考</strong>：为什么转速越高，点云越稀疏？</p>
+<h4 id="_27">实验二：激光线数对覆盖范围的影响</h4>
+<table>
+<thead>
+<tr>
+<th>线数</th>
+<th>垂直间隔</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4</td>
+<td>10°</td>
+<td>远距离探测</td>
+</tr>
+<tr>
+<td>16</td>
+<td>2°</td>
+<td>通用场景</td>
+</tr>
+<tr>
+<td>32</td>
+<td>1°</td>
+<td>高精度需求</td>
+</tr>
+<tr>
+<td>64</td>
+<td>0.5°</td>
+<td>近距离精细扫描</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_28">实验三：垂直视场角的影响</h4>
+<p>调节垂直 FOV 滑块，观察：
+- FOV 较小时：只能扫描水平附近区域
+- FOV 较大时：可以扫描地面和高处物体</p>
+<h3 id="65">6.5 思考题</h3>
+<ol>
+<li><strong>原理理解</strong></li>
+<li>机械旋转式 LiDAR 的水平分辨率由什么决定？</li>
+<li>
+<p>为什么垂直方向的线束分布可以是非均匀的？</p>
+</li>
+<li>
+<p><strong>算法设计</strong></p>
+</li>
+<li>Slab 方法相比遍历三角形有什么优势？</li>
+<li>
+<p>如何优化多物体的碰撞检测性能？</p>
+</li>
+<li>
+<p><strong>应用拓展</strong></p>
+</li>
+<li>如何将点云数据用于障碍物检测？</li>
+<li>
+<p>如何实现多帧点云的配准？</p>
+</li>
+<li>
+<p><strong>编程实践</strong></p>
+</li>
+<li>尝试添加新的环境对象（如树木、行人）</li>
+<li>实现点云数据的导出功能</li>
+</ol>
+<hr />
+<h2 id="_29">第七章：重要技术概念索引</h2>
+<h3 id="71-opengl">7.1 OpenGL 核心概念</h3>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>说明</th>
+<th>代码位置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>VAO/VBO</strong></td>
+<td>顶点数组对象/缓冲对象</td>
+<td>本项目使用立即模式（glBegin/glEnd）</td>
+</tr>
+<tr>
+<td><strong>深度测试</strong></td>
+<td>处理物体遮挡关系</td>
+<td><code>glEnable(GL_DEPTH_TEST)</code></td>
+</tr>
+<tr>
+<td><strong>混合</strong></td>
+<td>实现半透明效果</td>
+<td><code>glEnable(GL_BLEND)</code></td>
+</tr>
+<tr>
+<td><strong>光照</strong></td>
+<td>模拟真实光照效果</td>
+<td><code>glEnable(GL_LIGHTING)</code></td>
+</tr>
+<tr>
+<td><strong>投影变换</strong></td>
+<td>3D 到 2D 的映射</td>
+<td><code>gluPerspective()</code></td>
+</tr>
+<tr>
+<td><strong>视图变换</strong></td>
+<td>相机位置和方向</td>
+<td><code>gluLookAt()</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="72">7.2 碰撞检测算法</h3>
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>适用对象</th>
+<th>复杂度</th>
+<th>参考文献</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Slab 方法</strong></td>
+<td>AABB（长方体）</td>
+<td>O(1)</td>
+<td>[1]</td>
+</tr>
+<tr>
+<td><strong>二次方程法</strong></td>
+<td>圆柱体</td>
+<td>O(1)</td>
+<td>[2]</td>
+</tr>
+<tr>
+<td><strong>射线-平面</strong></td>
+<td>无限平面</td>
+<td>O(1)</td>
+<td>[3]</td>
+</tr>
+</tbody>
+</table>
+<h3 id="73-lidar">7.3 LiDAR 关键参数</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>英文</th>
+<th>计算方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>水平分辨率</td>
+<td>Horizontal Resolution</td>
+<td>360° / (转速 × 积分时间)</td>
+</tr>
+<tr>
+<td>垂直分辨率</td>
+<td>Vertical Resolution</td>
+<td>垂直FOV / (线数 - 1)</td>
+</tr>
+<tr>
+<td>点云密度</td>
+<td>Point Density</td>
+<td>水平点数 × 线数 / 秒</td>
+</tr>
+<tr>
+<td>探测距离</td>
+<td>Detection Range</td>
+<td>取决于激光功率和目标反射率</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_30">附录：参考资料</h2>
+<h3 id="a">A. 推荐阅读</h3>
+<ol>
+<li><strong>OpenGL 编程</strong></li>
+<li>《OpenGL 编程指南》（红宝书）</li>
+<li>
+<p>LearnOpenGL: https://learnopengl.com/</p>
+</li>
+<li>
+<p><strong>LiDAR 技术</strong></p>
+</li>
+<li>Velodyne LiDAR 官方文档</li>
+<li>
+<p>《Autonomous Driving: Technical Challenges and Solutions》</p>
+</li>
+<li>
+<p><strong>碰撞检测</strong></p>
+</li>
+<li>《Real-Time Collision Detection》- Christer Ericson</li>
+<li>Ray Tracing in One Weekend</li>
+</ol>
+<h3 id="b">B. 在线资源</h3>
+<ul>
+<li>PyOpenGL 文档: http://pyopengl.sourceforge.net/</li>
+<li>PyQt5 文档: https://www.riverbankcomputing.com/static/Docs/PyQt5/</li>
+<li>NumPy 文档: https://numpy.org/doc/</li>
+</ul>
+<h3 id="c">C. 相关开源项目</h3>
+<ul>
+<li>PCL (Point Cloud Library): https://pointclouds.org/</li>
+<li>Open3D: http://www.open3d.org/</li>
+<li>ROS LiDAR 驱动: https://wiki.ros.org/lidar</li>
+</ul>
+<h3 id="d">D. 视频教程</h3>
+<ul>
+<li>LiDAR 工作原理动画: YouTube 搜索 "LiDAR explained"</li>
+<li>OpenGL 教程: YouTube 搜索 "OpenGL tutorial Python"</li>
+</ul>
+<hr />
+<h2 id="_31">附录：快捷键参考</h2>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>R</code></td>
+<td>重置视角</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td>俯视图</td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td>正视图</td>
+</tr>
+<tr>
+<td><code>3</code></td>
+<td>侧视图</td>
+</tr>
+<tr>
+<td><code>4</code></td>
+<td>透视图</td>
+</tr>
+<tr>
+<td><code>5</code></td>
+<td>等轴视图</td>
+</tr>
+<tr>
+<td><code>ESC</code></td>
+<td>退出程序</td>
+</tr>
+<tr>
+<td>鼠标左键拖拽</td>
+<td>旋转视角</td>
+</tr>
+<tr>
+<td>鼠标滚轮</td>
+<td>缩放</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>本教材配套项目：机械旋转式激光雷达教学演示系统</em></p>
+<p><em>最后更新：2026年2月</em></p>
+</body>
+</html>

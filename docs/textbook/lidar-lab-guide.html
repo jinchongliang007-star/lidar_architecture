@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LiDAR 实验指导书</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --code-bg: #f5f5f5;
+            --border-color: #e0e0e0;
+            --link-color: #0066cc;
+        }
+
+        @media print {
+            body {
+                font-size: 11pt;
+            }
+            .no-print {
+                display: none !important;
+            }
+            @page {
+                margin: 2cm;
+                size: A4;
+            }
+            h1, h2, h3 {
+                page-break-after: avoid;
+            }
+            pre, table, img {
+                page-break-inside: avoid;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            line-height: 1.8;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        h1 {
+            font-size: 2em;
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 15px;
+            margin-top: 40px;
+            color: #2c3e50;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 35px;
+            color: #34495e;
+        }
+
+        h3 {
+            font-size: 1.25em;
+            margin-top: 25px;
+            color: #2c3e50;
+        }
+
+        h4 {
+            font-size: 1.1em;
+            margin-top: 20px;
+            color: #34495e;
+        }
+
+        p {
+            margin: 15px 0;
+        }
+
+        code {
+            font-family: "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+            background-color: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+            font-size: 0.9em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95em;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        blockquote {
+            border-left: 4px solid #3498db;
+            margin: 20px 0;
+            padding: 10px 20px;
+            background-color: #f9f9f9;
+        }
+
+        ul, ol {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid #eee;
+            margin: 40px 0;
+        }
+
+        .print-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .print-button:hover {
+            background-color: #2980b9;
+        }
+
+        .toc {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px 25px;
+            margin: 30px 0;
+        }
+
+        .toc h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .toc ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .toc li {
+            margin: 8px 0;
+        }
+
+        .toc a {
+            color: #495057;
+        }
+
+        em {
+            color: #666;
+            font-size: 0.95em;
+        }
+    </style>
+</head>
+<body>
+    <button class="print-button no-print" onclick="window.print()">打印 / 导出 PDF</button>
+
+    <h1 id="_1">机械旋转式激光雷达实验指导书</h1>
+<h2 id="_2">实验概述</h2>
+<p>本实验指导书配合《机械旋转式激光雷达教学演示系统》主教材使用，通过一系列实践操作，帮助学生深入理解 LiDAR 技术原理。</p>
+<hr />
+<h2 id="_3">实验一：环境配置与程序运行</h2>
+<h3 id="_4">实验目的</h3>
+<ol>
+<li>掌握 Python 虚拟环境的创建与使用</li>
+<li>完成项目依赖的安装</li>
+<li>成功运行 LiDAR 演示程序</li>
+</ol>
+<h3 id="_5">实验环境</h3>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>要求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>操作系统</td>
+<td>Windows 10+ / macOS 10.14+ / Linux</td>
+</tr>
+<tr>
+<td>Python 版本</td>
+<td>3.8 或更高</td>
+</tr>
+<tr>
+<td>显卡</td>
+<td>支持 OpenGL 3.0+</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>4GB 以上</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_6">实验步骤</h3>
+<h4 id="1">步骤 1：获取项目代码</h4>
+<pre><code class="language-bash"># 如果使用 Git
+git clone &lt;项目仓库地址&gt;
+cd lidar_architecture
+
+# 或直接解压项目压缩包
+</code></pre>
+<h4 id="2">步骤 2：创建虚拟环境</h4>
+<pre><code class="language-bash"># 创建虚拟环境
+python -m venv venv
+
+# 激活虚拟环境
+# Windows:
+venv\Scripts\activate
+# macOS/Linux:
+source venv/bin/activate
+</code></pre>
+<h4 id="3">步骤 3：安装依赖</h4>
+<pre><code class="language-bash"># 安装所有依赖
+pip install -r requirements.txt
+
+# 验证安装
+python -c &quot;import PyQt5; import OpenGL; import numpy; print('所有依赖安装成功！')&quot;
+</code></pre>
+<h4 id="4">步骤 4：运行程序</h4>
+<pre><code class="language-bash">python main.py
+</code></pre>
+<h3 id="_7">实验验证</h3>
+<p>程序启动后，应看到以下界面元素：</p>
+<ul>
+<li>[ ] 左侧 3D 渲染区域显示 LiDAR 模型</li>
+<li>[ ] 右侧控制面板显示参数滑块</li>
+<li>[ ] 可以用鼠标旋转、缩放视角</li>
+<li>[ ] 状态栏显示当前帧率</li>
+</ul>
+<h3 id="_8">常见问题</h3>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>解决方案</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ModuleNotFoundError: No module named 'PyQt5'</code></td>
+<td>确保已激活虚拟环境，重新运行 <code>pip install -r requirements.txt</code></td>
+</tr>
+<tr>
+<td>OpenGL 相关错误</td>
+<td>更新显卡驱动，确保硬件支持 OpenGL 3.0+</td>
+</tr>
+<tr>
+<td>程序闪退</td>
+<td>检查 Python 版本是否为 3.8+，查看终端错误信息</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_9">实验二：参数调节实验</h2>
+<h3 id="_10">实验目的</h3>
+<ol>
+<li>理解转速（RPM）对点云密度的影响</li>
+<li>掌握激光线数与垂直覆盖范围的关系</li>
+<li>观察垂直视场角（FOV）对扫描效果的影响</li>
+</ol>
+<h3 id="_11">实验器材</h3>
+<ul>
+<li>已配置完成的 LiDAR 演示程序</li>
+<li>实验记录表格</li>
+</ul>
+<h3 id="_12">实验内容</h3>
+<h4 id="21">2.1 转速实验</h4>
+<p><strong>实验原理</strong>：转速（RPM）决定 LiDAR 每秒旋转的圈数，影响水平方向的采样密度。</p>
+<p><strong>实验步骤</strong>：</p>
+<ol>
+<li>启动程序，将激光线数设为 16</li>
+<li>将垂直 FOV 设为 30°</li>
+<li>分别设置转速为 5、10、15、20 RPM</li>
+<li>观察并记录点云密度变化</li>
+</ol>
+<p><strong>数据记录表</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>转速 (RPM)</th>
+<th>每圈水平点数（估算）</th>
+<th>点云密度观察</th>
+<th>旋转一周时间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5</td>
+<td></td>
+<td>密集 / 适中 / 稀疏</td>
+<td>秒</td>
+</tr>
+<tr>
+<td>10</td>
+<td></td>
+<td>密集 / 适中 / 稀疏</td>
+<td>秒</td>
+</tr>
+<tr>
+<td>15</td>
+<td></td>
+<td>密集 / 适中 / 稀疏</td>
+<td>秒</td>
+</tr>
+<tr>
+<td>20</td>
+<td></td>
+<td>密集 / 适中 / 稀疏</td>
+<td>秒</td>
+</tr>
+</tbody>
+</table>
+<p><strong>思考题</strong>：
+- 为什么转速越高，点云越稀疏？
+- 在实际自动驾驶中，如何平衡转速和点云密度？</p>
+<h4 id="22">2.2 激光线数实验</h4>
+<p><strong>实验原理</strong>：激光线数决定垂直方向的采样密度，影响对高度变化的检测能力。</p>
+<p><strong>实验步骤</strong>：</p>
+<ol>
+<li>将转速固定为 10 RPM</li>
+<li>将垂直 FOV 固定为 30°</li>
+<li>分别设置激光线数为 4、8、16、32</li>
+<li>观察点云在垂直方向的分布变化</li>
+</ol>
+<p><strong>数据记录表</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>激光线数</th>
+<th>垂直角度间隔</th>
+<th>地面检测效果</th>
+<th>车辆轮廓清晰度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4</td>
+<td>°</td>
+<td>差 / 中 / 好</td>
+<td>差 / 中 / 好</td>
+</tr>
+<tr>
+<td>8</td>
+<td>°</td>
+<td>差 / 中 / 好</td>
+<td>差 / 中 / 好</td>
+</tr>
+<tr>
+<td>16</td>
+<td>°</td>
+<td>差 / 中 / 好</td>
+<td>差 / 中 / 好</td>
+</tr>
+<tr>
+<td>32</td>
+<td>°</td>
+<td>差 / 中 / 好</td>
+<td>差 / 中 / 好</td>
+</tr>
+</tbody>
+</table>
+<p><strong>计算公式</strong>：</p>
+<pre><code>垂直角度间隔 = 垂直FOV / (激光线数 - 1)
+</code></pre>
+<h4 id="23">2.3 垂直视场角实验</h4>
+<p><strong>实验原理</strong>：垂直 FOV 决定 LiDAR 能够扫描的垂直范围。</p>
+<p><strong>实验步骤</strong>：</p>
+<ol>
+<li>将转速固定为 10 RPM</li>
+<li>将激光线数固定为 16</li>
+<li>分别设置垂直 FOV 为 15°、30°、45°、60°</li>
+<li>观察地面和高处物体的检测情况</li>
+</ol>
+<p><strong>数据记录表</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>垂直 FOV</th>
+<th>地面点云覆盖</th>
+<th>车辆顶部检测</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>15°</td>
+<td>差 / 中 / 好</td>
+<td>差 / 中 / 好</td>
+<td></td>
+</tr>
+<tr>
+<td>30°</td>
+<td>差 / 中 / 好</td>
+<td>差 / 中 / 好</td>
+<td></td>
+</tr>
+<tr>
+<td>45°</td>
+<td>差 / 中 / 好</td>
+<td>差 / 中 / 好</td>
+<td></td>
+</tr>
+<tr>
+<td>60°</td>
+<td>差 / 中 / 好</td>
+<td>差 / 中 / 好</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="_13">实验总结</h3>
+<p>根据以上实验数据，回答以下问题：</p>
+<ol>
+<li>在高速公路场景中，推荐的参数组合是？为什么？</li>
+<li>在城市道路场景中，推荐的参数组合是？为什么？</li>
+<li>如果需要检测近距离行人，应该优先调整哪个参数？</li>
+</ol>
+<hr />
+<h2 id="_14">实验三：代码修改实验</h2>
+<h3 id="_15">实验目的</h3>
+<ol>
+<li>理解程序的核心代码结构</li>
+<li>掌握基本的代码修改方法</li>
+<li>实现简单的功能扩展</li>
+</ol>
+<h3 id="_16">实验内容</h3>
+<h4 id="31-lidar">3.1 修改 LiDAR 颜色</h4>
+<p><strong>任务</strong>：将 LiDAR 模型的主体颜色从深灰色改为深蓝色</p>
+<p><strong>文件位置</strong>：<code>opengl/scene.py</code></p>
+<p><strong>修改步骤</strong>：</p>
+<ol>
+<li>打开 <code>opengl/scene.py</code> 文件</li>
+<li>找到 <code>colors</code> 字典定义（约第 20 行）</li>
+<li>修改 <code>body</code> 的颜色值</li>
+</ol>
+<pre><code class="language-python"># 原代码
+self.colors = {
+    'body': [0.2, 0.2, 0.25, 1.0],  # 深灰色
+    ...
+}
+
+# 修改后
+self.colors = {
+    'body': [0.1, 0.2, 0.4, 1.0],  # 深蓝色
+    ...
+}
+</code></pre>
+<p><strong>验证</strong>：重新运行程序，观察 LiDAR 模型颜色变化</p>
+<h4 id="32">3.2 修改点云颜色</h4>
+<p><strong>任务</strong>：将地面点云颜色从绿色改为灰色</p>
+<p><strong>文件位置</strong>：<code>opengl/scene.py</code></p>
+<p><strong>修改步骤</strong>：</p>
+<ol>
+<li>找到 <code>_draw_point_cloud</code> 方法（约第 200 行）</li>
+<li>找到 <code>ground</code> 对应的颜色设置</li>
+</ol>
+<pre><code class="language-python"># 原代码
+elif hit_type == 'ground':
+    glColor4f(0.2, 0.8, 0.3, 0.9)  # 绿色
+
+# 修改后
+elif hit_type == 'ground':
+    glColor4f(0.5, 0.5, 0.5, 0.9)  # 灰色
+</code></pre>
+<p><strong>验证</strong>：重新运行程序，观察地面点云颜色变化</p>
+<h4 id="33-lidar">3.3 调整 LiDAR 高度（进阶）</h4>
+<p><strong>任务</strong>：将 LiDAR 的安装高度从当前位置提高 0.5 米</p>
+<p><strong>提示</strong>：
+- 找到 LiDAR 模型绘制的位置
+- 修改 Y 轴方向的平移量
+- 注意：修改高度后，点云生成位置也需要相应调整</p>
+<pre><code class="language-python"># 在 scene.py 中找到类似代码
+glTranslatef(0, 0, 0)  # 修改 Y 坐标
+
+# 同时需要修改点云生成的起点
+lidar_origin = np.array([0.35, 0.4, 0])  # 修改 Y 坐标
+</code></pre>
+<h4 id="34">3.4 添加新的环境对象（挑战）</h4>
+<p><strong>任务</strong>：在场景中添加一个立方体障碍物</p>
+<p><strong>参考代码</strong>：</p>
+<pre><code class="language-python"># 在 environment.py 中添加立方体类
+class Cube:
+    def __init__(self, center, size):
+        self.center = np.array(center)
+        self.size = size
+
+    def get_bounds(self):
+        half = self.size / 2
+        return (
+            self.center - half,
+            self.center + half
+        )
+
+    def ray_intersect(self, ray):
+        # 使用 Slab 方法
+        min_bound, max_bound = self.get_bounds()
+        # ... 参考 Wall 类的实现
+
+    def render(self):
+        # 绘制立方体
+        glColor4f(0.8, 0.3, 0.3, 0.9)  # 红色
+        # ... OpenGL 绘制代码
+</code></pre>
+<h3 id="_17">实验报告要求</h3>
+<ol>
+<li>记录所有修改的代码片段（修改前后对比）</li>
+<li>截图展示修改后的效果</li>
+<li>说明修改过程中遇到的问题及解决方法</li>
+</ol>
+<hr />
+<h2 id="_18">实验四：点云数据分析（扩展实验）</h2>
+<h3 id="_19">实验目的</h3>
+<ol>
+<li>理解点云数据的格式和结构</li>
+<li>学习基本的点云处理方法</li>
+<li>实现简单的数据导出功能</li>
+</ol>
+<h3 id="_20">实验内容</h3>
+<h4 id="41">4.1 查看点云数据结构</h4>
+<p><strong>任务</strong>：在程序中添加调试输出，查看点云数据</p>
+<pre><code class="language-python"># 在 scene.py 的 generate_point_cloud 方法末尾添加
+print(f&quot;点云数量: {len(self.point_cloud_data)}&quot;)
+if self.point_cloud_data:
+    print(f&quot;第一个点: {self.point_cloud_data[0]}&quot;)
+    print(f&quot;数据格式: (x, y, z, hit_type)&quot;)
+</code></pre>
+<h4 id="42">4.2 统计点云分布</h4>
+<p><strong>任务</strong>：统计不同类型物体的点云数量</p>
+<pre><code class="language-python"># 添加统计代码
+def analyze_point_cloud(self):
+    stats = {'vehicle': 0, 'wall': 0, 'ground': 0, 'unknown': 0}
+    for point in self.point_cloud_data:
+        hit_type = point[3] if len(point) &gt; 3 else 'unknown'
+        stats[hit_type] = stats.get(hit_type, 0) + 1
+    return stats
+</code></pre>
+<h4 id="43">4.3 导出点云数据</h4>
+<p><strong>任务</strong>：将点云数据导出为 CSV 文件</p>
+<pre><code class="language-python">import csv
+
+def export_point_cloud(self, filename='point_cloud.csv'):
+    with open(filename, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['x', 'y', 'z', 'type'])
+        for point in self.point_cloud_data:
+            writer.writerow(point)
+    print(f&quot;导出 {len(self.point_cloud_data)} 个点到 {filename}&quot;)
+</code></pre>
+<hr />
+<h2 id="_21">实验报告要求</h2>
+<h3 id="_22">报告结构</h3>
+<ol>
+<li><strong>实验概述</strong>（10%）</li>
+<li>实验目的</li>
+<li>
+<p>实验环境</p>
+</li>
+<li>
+<p><strong>实验过程</strong>（40%）</p>
+</li>
+<li>每个实验的详细步骤</li>
+<li>关键截图</li>
+<li>
+<p>数据记录表格</p>
+</li>
+<li>
+<p><strong>实验结果分析</strong>（30%）</p>
+</li>
+<li>参数对点云质量的影响分析</li>
+<li>代码修改效果说明</li>
+<li>
+<p>遇到的问题及解决方案</p>
+</li>
+<li>
+<p><strong>思考与总结</strong>（20%）</p>
+</li>
+<li>实验思考题回答</li>
+<li>学习心得</li>
+<li>对 LiDAR 技术的认识</li>
+</ol>
+<h3 id="_23">评分标准</h3>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>优秀 (90-100)</th>
+<th>良好 (80-89)</th>
+<th>中等 (70-79)</th>
+<th>及格 (60-69)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>实验完成度</td>
+<td>全部完成，有创新</td>
+<td>全部完成</td>
+<td>大部分完成</td>
+<td>基本完成</td>
+</tr>
+<tr>
+<td>数据记录</td>
+<td>完整准确</td>
+<td>基本完整</td>
+<td>部分完整</td>
+<td>有记录</td>
+</tr>
+<tr>
+<td>分析深度</td>
+<td>深入透彻</td>
+<td>较为深入</td>
+<td>基本分析</td>
+<td>简单描述</td>
+</tr>
+<tr>
+<td>报告规范</td>
+<td>格式规范，图文并茂</td>
+<td>格式良好</td>
+<td>格式基本正确</td>
+<td>格式欠佳</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_24">提交要求</h3>
+<ul>
+<li>报告格式：PDF</li>
+<li>文件命名：<code>学号_姓名_LiDAR实验报告.pdf</code></li>
+<li>提交截止：实验完成后一周内</li>
+<li>包含内容：报告 PDF + 修改后的代码文件</li>
+</ul>
+<hr />
+<h2 id="_25">附录：快捷键速查</h2>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>R</code></td>
+<td>重置视角</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td>俯视图</td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td>正视图</td>
+</tr>
+<tr>
+<td><code>3</code></td>
+<td>侧视图</td>
+</tr>
+<tr>
+<td><code>4</code></td>
+<td>透视图</td>
+</tr>
+<tr>
+<td><code>5</code></td>
+<td>等轴视图</td>
+</tr>
+<tr>
+<td><code>ESC</code></td>
+<td>退出程序</td>
+</tr>
+<tr>
+<td>鼠标左键拖拽</td>
+<td>旋转视角</td>
+</tr>
+<tr>
+<td>鼠标滚轮</td>
+<td>缩放</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>本实验指导书配套项目：机械旋转式激光雷达教学演示系统</em></p>
+<p><em>最后更新：2026年2月</em></p>
+</body>
+</html>
